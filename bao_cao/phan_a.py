@@ -266,8 +266,8 @@ def ly_do_chon_de_tai(doc):
          "chất lượng dự báo thống kê, lớp thứ hai chuyển dự báo thành chiến lược "
          "giao dịch có tính chi phí và đánh giá bằng hệ chỉ tiêu tài chính. "
          "Việc bổ sung bước kiểm định chất lượng dữ liệu độc lập trước khi diễn "
-         "giải kết quả, cùng với thí nghiệm đối chứng trên nguồn dữ liệu thứ hai, "
-         "là điểm khác biệt về phương pháp so với các công bố tương tự.")
+         "giải kết quả là điểm khác biệt về phương pháp so với các công bố "
+         "tương tự.")
 
     heading(doc, "3. Khả năng ứng dụng của kết quả", level=2)
     para(doc,
@@ -331,11 +331,10 @@ def muc_tieu_noi_dung_phuong_phap(doc):
     heading(doc, "3.1. Phương pháp thu thập và xử lý dữ liệu", level=3)
     para(doc,
          "Dữ liệu sơ cấp là chuỗi giá vàng dạng OHLCV theo ngày giai đoạn "
-         "02/01/2015 – 30/12/2025. Dữ liệu được kiểm định chất lượng bằng ba "
-         "phép kiểm định thống kê trước khi sử dụng: tỷ lệ bước giá trùng lặp, "
-         "hệ số tự tương quan của log-return, và phân bố quan sát theo ngày "
-         "trong tuần. Một nguồn dữ liệu thứ hai được thu thập độc lập để thực "
-         "hiện thí nghiệm đối chứng.")
+         "02/01/2015 – 30/12/2025 do đề tài cung cấp. Dữ liệu được kiểm định "
+         "chất lượng bằng ba phép kiểm định thống kê trước khi sử dụng: tỷ lệ "
+         "bước giá trùng lặp, hệ số tự tương quan của log-return, và phân bố "
+         "quan sát theo ngày trong tuần.")
 
     heading(doc, "3.2. Phương pháp mô hình hóa", level=3)
     para(doc,

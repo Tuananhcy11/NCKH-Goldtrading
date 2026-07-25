@@ -122,12 +122,12 @@ check(len(doc.tables) >= 20, "So bang trong bao cao", f"{len(doc.tables)} bang")
 
 with zipfile.ZipFile(PATH) as z:
     imgs = [n for n in z.namelist() if n.startswith("word/media/")]
-check(len(imgs) >= 8, "So hinh anh nhung trong file", f"{len(imgs)} hinh")
+check(len(imgs) >= 7, "So hinh anh nhung trong file", f"{len(imgs)} hinh")
 
 seq_bang = xml_all.count("SEQ Bảng")
 seq_hinh = xml_all.count("SEQ Hình")
 check(seq_bang >= 20, "Field SEQ danh so bang tu dong", f"{seq_bang} field")
-check(seq_hinh >= 8, "Field SEQ danh so hinh tu dong", f"{seq_hinh} field")
+check(seq_hinh >= 7, "Field SEQ danh so hinh tu dong", f"{seq_hinh} field")
 
 check(xml_all.count("TOC") >= 3, "Field TOC (muc luc + 2 danh muc)",
       f"{xml_all.count('TOC')} field")

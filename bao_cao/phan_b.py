@@ -268,8 +268,8 @@ def chuong_2(doc):
               ["Số quan sát", "4.016"],
               ["Khoảng thời gian", "02/01/2015 – 30/12/2025"],
               ["Số quan sát mỗi năm", "≈ 365"],
-              ["Giá đóng cửa nhỏ nhất", "≈ 1.054"],
-              ["Giá đóng cửa lớn nhất", "≈ 4.498"],
+              ["Giá đóng cửa nhỏ nhất", "≈ 1.050,80 (17/12/2015)"],
+              ["Giá đóng cửa lớn nhất", "≈ 4.491,69 (25/12/2025)"],
               ["Tỷ lệ ngày tăng giá", "66,13%"],
               ["Giá trị khuyết", "Không có"],
           ],
@@ -364,11 +364,12 @@ def chuong_2(doc):
          "cần nhận diện quan sát đang nằm trong đoạn nội suy là đã dự báo đúng "
          "gần như hoàn toàn. Đây là năng lực không tồn tại trên thị trường thực.")
     para(doc,
-         "Nhận định này cũng giải thích vì sao tỷ lệ ngày tăng giá đạt 66,13% "
-         "thay vì khoảng 53% như dữ liệu thật: mỗi lần giá tăng qua cuối tuần, "
-         "phép nội suy tạo ra ba ngày tăng liên tiếp thay vì một. Kết quả nghiên "
-         "cứu ở Chương 3 vì vậy được trình bày kèm thí nghiệm đối chứng ở mục "
-         "3.7 và phần đánh giá hạn chế ở mục 4.5.1.")
+         "Nhận định này cũng góp phần giải thích vì sao tỷ lệ ngày tăng giá đạt "
+         "66,13%, cao hơn đáng kể so với mức thường được ghi nhận cho thị "
+         "trường vàng trong các nghiên cứu thị trường hiệu quả (khoảng 52% – "
+         "53%): mỗi lần giá tăng qua cuối tuần, phép nội suy tạo ra ba ngày "
+         "tăng liên tiếp thay vì một. Kết quả nghiên cứu ở Chương 3 vì vậy phải "
+         "được diễn giải kèm phần đánh giá hạn chế ở mục 4.5.1.")
 
     # ---------------------------------------------------------------- 2.3
     heading(doc, "2.3. Xây dựng tập đặc trưng", level=2)

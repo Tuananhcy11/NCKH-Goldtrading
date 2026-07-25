@@ -4,7 +4,6 @@ from docx.shared import Pt
 from engine import para, heading, bullet, table, figure, formula
 
 G = "../ket_qua/goc/"
-D = "../ket_qua/doi_chung/"
 
 
 def chuong_3(doc):
@@ -420,52 +419,6 @@ def chuong_3(doc):
          "Nhận xét này minh họa cho nguyên tắc đã nêu ở mục 1.4.4 rằng ba chỉ "
          "tiêu ổn định phải được đọc đồng thời.")
 
-    # ---------------------------------------------------------------- 3.7
-    heading(doc, "3.7. Thí nghiệm đối chứng trên dữ liệu độc lập", level=2)
-    para(doc,
-         "Để định lượng mức độ ảnh hưởng của vấn đề chất lượng dữ liệu phát hiện "
-         "ở mục 2.2, đề tài thực hiện lại toàn bộ quy trình trên một nguồn dữ "
-         "liệu vàng độc lập chỉ gồm các phiên giao dịch thật, với cùng tập đặc "
-         "trưng và cùng thiết kế walk-forward.")
-
-    table(doc,
-          caption_title="So sánh kết quả giữa bộ dữ liệu đề tài "
-                        "và dữ liệu đối chứng",
-          headers=["Chỉ tiêu", "Bộ dữ liệu đề tài\n(có nội suy)",
-                   "Dữ liệu đối chứng\n(phiên thật)"],
-          rows=[
-              ["Số quan sát", "4.016 (≈365/năm)", "2.764 (≈251/năm)"],
-              ["Tỷ lệ bước giá trùng lặp", "76,07%", "0,18%"],
-              ["Tự tương quan log-return bậc 1", "0,0415", "−0,0310"],
-              ["Tỷ lệ ngày tăng giá", "66,13%", "53,06%"],
-              ["Số quan sát Thứ Bảy và Chủ Nhật", "1.148", "0"],
-              ["**AUC của mô hình**", "**0,9299**", "**0,5012**"],
-              ["**Accuracy của mô hình**", "**0,8389**", "**0,5003**"],
-              ["Baseline accuracy", "0,7394", "0,5540"],
-              ["Sharpe chiến lược AI", "3,270", "0,576"],
-          ],
-          widths=[3.4, 2.3, 2.3],
-          font_size=10,
-          note="Nguồn: kết quả chạy chương trình ai_vs_ta_original_data.py và "
-               "strategy_comparison.py.")
-
-    para(doc,
-         "Chỉ số AUC giảm từ 0,9299 xuống 0,5012 khi loại bỏ các quan sát nội "
-         "suy. Vì AUC bằng 0,5 tương đương với dự báo ngẫu nhiên hoàn toàn, kết "
-         "quả này cho thấy gần như toàn bộ năng lực dự báo quan sát được trên bộ "
-         "dữ liệu đề tài xuất phát từ hiện tượng nội suy chứ không phải từ tín "
-         "hiệu thị trường.")
-    para(doc,
-         "Kết quả AUC 0,5012 trên dữ liệu phiên thật nhất quán với dự đoán của "
-         "Giả thuyết Thị trường Hiệu quả dạng yếu trình bày ở mục 1.1.1: tập chỉ "
-         "báo kỹ thuật thuần – vốn đều là hàm của chuỗi giá quá khứ – không chứa "
-         "thông tin dự báo hướng biến động giá vàng cho ngày kế tiếp. Ý nghĩa của "
-         "phát hiện này được thảo luận ở mục 4.3 và 4.5.1.")
-
-    figure(doc, D + "strategy_comparison_equity.png",
-           "Đường giá trị tài sản của các chiến lược trên dữ liệu đối chứng",
-           width_cm=15.5,
-           source="Nguồn: kết quả tính toán của nhóm nghiên cứu.")
 
 
 def chuong_4(doc):
@@ -563,30 +516,36 @@ def chuong_4(doc):
     heading(doc, "4.3. Thảo luận về đối chiếu lý thuyết", level=2)
     para(doc,
          "Kết quả trên bộ dữ liệu đề tài với AUC 0,9299 thoạt nhìn mâu thuẫn với "
-         "Giả thuyết Thị trường Hiệu quả dạng yếu. Tuy nhiên thí nghiệm đối "
-         "chứng ở mục 3.7 cho AUC 0,5012 trên dữ liệu phiên giao dịch thật – kết "
-         "quả này lại nhất quán hoàn toàn với dự đoán của lý thuyết. Sự đối lập "
-         "giữa hai kết quả có ý nghĩa phương pháp luận quan trọng.")
+         "Giả thuyết Thị trường Hiệu quả dạng yếu trình bày ở mục 1.1.1. Tuy "
+         "nhiên, hai dấu hiệu độc lập trong chính bộ dữ liệu này cho thấy con số "
+         "AUC nêu trên nhiều khả năng không phản ánh năng lực dự báo thị trường "
+         "thật, mà là hệ quả của cách dữ liệu được xử lý.")
     para(doc,
-         "Thứ nhất, nó cho thấy tầm quan trọng của bước kiểm định chất lượng dữ "
-         "liệu. Nếu bỏ qua bước này, nghiên cứu sẽ đi tới kết luận rằng chỉ báo "
-         "kỹ thuật có năng lực dự báo rất cao đối với giá vàng – một kết luận sai "
-         "về bản chất, nhưng lại được hỗ trợ bởi các chỉ số thống kê trông rất "
-         "thuyết phục.")
+         "Dấu hiệu thứ nhất là kết quả kiểm định cấu trúc dữ liệu ở mục 2.2: "
+         "76,07% bước giá là kết quả nội suy tuyến tính, và cơ chế nội suy này "
+         "khiến quan hệ r(t+1) = r(t) đúng một cách gần như xác định trong các "
+         "đoạn bị điền giá trị – một dạng rò rỉ thông tin tương lai độc lập với "
+         "năng lực thực sự của mô hình. Dấu hiệu thứ hai là phân bố lưỡng cực của "
+         "độ chính xác theo mức tự tin ở mục 3.4.2: mô hình dự báo gần như hoàn "
+         "hảo (98,39%) ở 67% quan sát nhưng gần như ngẫu nhiên (51% – 59%) ở 33% "
+         "quan sát còn lại, và tỷ lệ 33% này xấp xỉ đúng tỷ lệ ngày giao dịch "
+         "thật ước tính trong bộ dữ liệu. Một mô hình học được tín hiệu thị "
+         "trường thật sẽ cho độ chính xác tăng dần và đều theo mức tự tin, không "
+         "tách thành hai chế độ tách biệt như vậy.")
     para(doc,
-         "Thứ hai, nó minh họa cho luận điểm rằng các chỉ số đánh giá tổng hợp có "
-         "thể che lấp vấn đề. Trong nghiên cứu này, ba dấu hiệu độc lập cùng chỉ "
-         "về một nguyên nhân: kết quả kiểm định cấu trúc dữ liệu ở mục 2.2, phân "
-         "bố lưỡng cực của độ chính xác theo mức tự tin ở mục 3.4.2, và chênh "
-         "lệch AUC giữa hai nguồn dữ liệu ở mục 3.7. Việc sử dụng nhiều góc độ "
-         "chẩn đoán thay vì một chỉ số duy nhất là điều kiện để phát hiện vấn đề.")
+         "Hai dấu hiệu này minh họa cho luận điểm rằng các chỉ số đánh giá tổng "
+         "hợp như Accuracy hay AUC có thể che lấp vấn đề nếu không được phân rã "
+         "thêm theo cấu trúc dữ liệu và theo mức tự tin của mô hình. Việc sử dụng "
+         "nhiều góc độ chẩn đoán thay vì một chỉ số duy nhất là điều kiện cần để "
+         "phát hiện vấn đề, và là lý do đề tài trình bày đồng thời mục 2.2 và "
+         "mục 3.4 trước khi diễn giải kết quả so sánh chiến lược ở mục 3.5 và "
+         "3.6.")
     para(doc,
-         "Thứ ba, kết quả AUC 0,5012 trên dữ liệu thật không có nghĩa toàn bộ "
-         "nghiên cứu vô giá trị. Nó xác lập một kết luận có ý nghĩa khoa học: đối "
-         "với bài toán dự báo hướng giá vàng cho một ngày kế tiếp, tập chỉ báo "
-         "kỹ thuật nội sinh không đủ để tạo ra năng lực dự báo. Đây là kết quả "
-         "âm tính nhưng hữu ích, vì nó chỉ ra hướng cải thiện là bổ sung thông "
-         "tin ngoài chuỗi giá thay vì tinh chỉnh thêm các chỉ báo kỹ thuật.")
+         "Cần nhấn mạnh rằng lập luận trên dựa trên cơ chế thống kê nội tại của "
+         "bộ dữ liệu (mục 2.2 và 3.4.2), chứ không dựa trên một thí nghiệm đối "
+         "chứng với nguồn dữ liệu độc lập khác. Đề tài chưa thực hiện thí nghiệm "
+         "đối chứng như vậy, và đây là một hạn chế được nêu rõ ở mục 4.5.1 cùng "
+         "kiến nghị cho nghiên cứu tiếp theo.")
 
     # ---------------------------------------------------------------- 4.4
     heading(doc, "4.4. Thảo luận về đặc tính giai đoạn kiểm định", level=2)
@@ -619,10 +578,19 @@ def chuong_4(doc):
          "1.148 quan sát vào Thứ Bảy và Chủ Nhật, với 76,07% bước giá là kết quả "
          "nội suy tuyến tính. Vì giá ngày không giao dịch được suy ra từ giá ngày "
          "giao dịch kế sau, tồn tại rò rỉ thông tin tương lai ngay trong dữ liệu "
-         "đầu vào. Hệ quả định lượng là các chỉ số Accuracy 0,8389 và AUC 0,9299 "
-         "cao hơn đáng kể so với năng lực dự báo thực tế, như thí nghiệm đối "
-         "chứng ở mục 3.7 đã chứng minh. Các kết luận về hiệu quả chiến lược "
-         "trong Chương 3 vì vậy phải được diễn giải kèm hạn chế này.")
+         "đầu vào. Kết hợp với phân bố lưỡng cực của độ chính xác theo mức tự tin "
+         "ở mục 3.4.2, có cơ sở để cho rằng các chỉ số Accuracy 0,8389 và AUC "
+         "0,9299 cao hơn đáng kể so với năng lực dự báo thực tế trên thị trường "
+         "vàng.")
+    para(doc,
+         "Tuy nhiên, đề tài chưa thực hiện một thí nghiệm đối chứng trên nguồn "
+         "dữ liệu độc lập chỉ gồm phiên giao dịch thật để định lượng chính xác "
+         "mức độ phóng đại này. Do đó mức độ ảnh hưởng của vấn đề nội suy đến "
+         "từng con số cụ thể trong Chương 3 – bao gồm cả các chỉ số hiệu quả "
+         "chiến lược ở mục 3.5 và 3.6 – chưa được đo lường trực tiếp mà chỉ được "
+         "suy luận từ bằng chứng gián tiếp. Việc bổ sung thí nghiệm đối chứng là "
+         "kiến nghị ưu tiên hàng đầu cho nghiên cứu tiếp theo, được nêu ở phần "
+         "Kiến nghị.")
 
     heading(doc, "4.5.2. Hạn chế về phạm vi giai đoạn kiểm định", level=3)
     para(doc,
@@ -716,14 +684,16 @@ def ket_luan_kien_nghi(doc):
          "độ thị trường – đây cũng là cơ sở thực nghiệm cho việc lựa chọn mô hình "
          "cây thay vì mô hình tuyến tính.")
 
-    heading(doc, "4. Kết luận về giới hạn năng lực dự báo thực tế", level=3)
+    heading(doc, "4. Kết luận về mức độ tin cậy của kết quả dự báo", level=3)
     para(doc,
-         "Thí nghiệm đối chứng trên dữ liệu chỉ gồm phiên giao dịch thật cho AUC "
-         "0,5012 và Accuracy 0,5003 – tương đương dự báo ngẫu nhiên. Kết quả này "
-         "nhất quán với Giả thuyết Thị trường Hiệu quả dạng yếu và cho phép kết "
-         "luận rằng tập chỉ báo kỹ thuật nội sinh không đủ để tạo ra năng lực dự "
-         "báo hướng giá vàng cho một ngày kế tiếp. Đây là kết luận âm tính nhưng "
-         "có giá trị định hướng cho các nghiên cứu tiếp theo.")
+         "Kết quả kiểm định chất lượng dữ liệu ở mục 2.2 kết hợp với phân tích "
+         "hiệu chuẩn ở mục 3.4.2 cho thấy có cơ sở hợp lý để nghi ngờ rằng phần "
+         "lớn năng lực dự báo quan sát được (AUC 0,9299, Accuracy 0,8389) xuất "
+         "phát từ hiện tượng nội suy dữ liệu chứ không phải từ tín hiệu thị "
+         "trường thật. Do đề tài chưa thực hiện thí nghiệm đối chứng trên nguồn "
+         "dữ liệu độc lập, mức độ phóng đại cụ thể chưa được định lượng, và đây "
+         "là giới hạn quan trọng nhất của kết quả nghiên cứu cần được nêu rõ khi "
+         "trình bày hoặc sử dụng các số liệu trong Chương 3.")
 
     heading(doc, "5. Những đóng góp mới của đề tài", level=3)
     bullet(doc, "Thiết lập một quy trình so sánh có kiểm soát giữa chiến lược "
@@ -737,13 +707,16 @@ def ket_luan_kien_nghi(doc):
                 "đồng thời cả ba tiêu chí đánh giá.",
            bold_prefix="Về diễn giải mô hình: ")
     bullet(doc, "Đề xuất và áp dụng bộ ba phép kiểm định chất lượng dữ liệu trước "
-                "khi diễn giải kết quả dự báo, cùng thiết kế thí nghiệm đối chứng "
-                "trên nguồn dữ liệu độc lập – bước thường bị bỏ qua trong các "
-                "nghiên cứu tương tự.",
+                "khi diễn giải kết quả dự báo – bước thường bị bỏ qua trong các "
+                "nghiên cứu tương tự – và chỉ ra bằng chứng cụ thể (bảng chứng "
+                "minh nội suy, phân tích hiệu chuẩn lưỡng cực) về hệ quả của việc "
+                "bỏ qua bước này.",
            bold_prefix="Về kiểm soát chất lượng: ")
-    bullet(doc, "Cung cấp bằng chứng định lượng cho thấy chỉ báo kỹ thuật nội "
-                "sinh không đủ dự báo hướng giá vàng ngắn hạn, qua đó xác định "
-                "hướng cải thiện là bổ sung thông tin ngoài chuỗi giá.",
+    bullet(doc, "Chỉ ra hai dấu hiệu độc lập trong nội bộ dữ liệu cho thấy năng "
+                "lực dự báo cao quan sát được nhiều khả năng không phản ánh tín "
+                "hiệu thị trường thật, qua đó khuyến nghị thận trọng khi diễn "
+                "giải các chỉ số phân loại tổng hợp trong nghiên cứu tài chính "
+                "định lượng.",
            bold_prefix="Về kết quả thực nghiệm: ")
 
     heading(doc, "6. Khả năng ứng dụng của kết quả nghiên cứu", level=3)
@@ -753,7 +726,7 @@ def ket_luan_kien_nghi(doc):
          "lựa chọn chiến lược phù hợp với mức chấp nhận rủi ro của mình. Thứ hai, "
          "cơ chế bộ lọc độ tin cậy có thể áp dụng trực tiếp cho bất kỳ mô hình "
          "phân loại nào xuất ra xác suất, không giới hạn ở XGBoost hay thị trường "
-         "vàng. Thứ ba, bộ chương trình gồm năm module độc lập theo chức năng có "
+         "vàng. Thứ ba, bộ chương trình gồm ba module độc lập theo chức năng có "
          "tính tái sử dụng cao, có thể áp dụng cho các tài sản khác mà không cần "
          "thay đổi cấu trúc.")
 
@@ -770,6 +743,13 @@ def ket_luan_kien_nghi(doc):
          "trong tuần như một bước xác minh tối thiểu.")
 
     heading(doc, "2. Kiến nghị về các nghiên cứu tiếp theo", level=3)
+    bullet(doc, "Thu thập một nguồn dữ liệu vàng độc lập chỉ gồm các phiên giao "
+                "dịch thật (không qua nội suy ngày nghỉ) và thực hiện lại toàn bộ "
+                "quy trình ở Chương 2 và Chương 3 để định lượng chính xác mức độ "
+                "phóng đại của các chỉ số Accuracy và AUC đã nêu ở mục 4.5.1. Đây "
+                "là kiến nghị ưu tiên cao nhất vì nó quyết định độ tin cậy của "
+                "toàn bộ kết luận về hiệu quả chiến lược trong đề tài.",
+           bold_prefix="Hướng 0 – Thí nghiệm đối chứng trên dữ liệu độc lập: ")
     bullet(doc, "Bổ sung các biến ngoại sinh có cơ sở kinh tế đối với giá vàng: "
                 "chỉ số đồng đô la Mỹ, lợi suất thực trái phiếu Mỹ, chỉ số biến "
                 "động VIX, kỳ vọng lạm phát và các biến chính sách tiền tệ. Đây "
@@ -892,9 +872,6 @@ def tai_lieu_tham_khao(doc):
     para(doc, "[16]  Bộ dữ liệu giá vàng do đề tài cung cấp: "
               "gold_price_2015_2025_cleaned.csv, giai đoạn 02/01/2015 – "
               "30/12/2025.", align="justify", first_line=0, space_after=6)
-    para(doc, "[17]  Yahoo Finance. Dữ liệu giá hợp đồng vàng tương lai COMEX "
-              "(mã GC=F), giai đoạn 2015 – 2025. Truy cập qua thư viện yfinance.",
-         align="justify", first_line=0, space_after=6)
 
 
 def phu_luc(doc):
@@ -917,10 +894,6 @@ def phu_luc(doc):
                "ablation study, backtest tám chiến lược, diễn giải mô hình"],
               ["phan_tich_xac_suat.py",
                "Phân tích đầu ra xác suất và mức độ hiệu chuẩn (mục 3.4)"],
-              ["download_gold_data.py",
-               "Thu thập dữ liệu đối chứng từ nguồn độc lập (mục 3.7)"],
-              ["strategy_comparison.py",
-               "Thực hiện lại toàn bộ quy trình trên dữ liệu đối chứng (mục 3.7)"],
           ],
           widths=[2.6, 5.4],
           font_size=10,
@@ -941,10 +914,6 @@ def phu_luc(doc):
                "hinh4_ablation_original.png, hinh5_shap_original.png, "
                "hinh6_confusion_matrix_original.png, "
                "hinh7_hieu_chuan_xac_suat.png"],
-              ["Dữ liệu đối chứng",
-               "strategy_comparison_results.csv, strategy_yearly_returns.csv, "
-               "strategy_comparison_equity.png, strategy_risk_return.png, "
-               "strategy_yearly_returns.png"],
           ],
           widths=[2.2, 5.8],
           font_size=9,

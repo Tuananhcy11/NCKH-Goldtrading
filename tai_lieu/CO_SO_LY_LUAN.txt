@@ -1629,41 +1629,37 @@ Mô hình chỉ cần nhận diện "quan sát này đang ở trong đoạn nộ
       tuần, phép nội suy tạo ra BA ngày tăng liên tiếp thay vì một.
 
 
-6.5. THÍ NGHIỆM ĐỐI CHỨNG
+6.5. MỨC ĐỘ TIN CẬY CỦA KẾT QUẢ DỰ BÁO (KHÔNG DỰA TRÊN ĐỐI CHỨNG NGOÀI)
 --------------------------------------------------------------------------------
-Để định lượng mức độ phóng đại, nhóm thực hiện lại toàn bộ pipeline trên dữ liệu
-vàng thật (nguồn Yahoo Finance, mã GC=F - hợp đồng vàng tương lai COMEX), với
-CÙNG tập đặc trưng và CÙNG thiết kế walk-forward.
+Đề tài KHÔNG thực hiện thí nghiệm đối chứng trên một nguồn dữ liệu độc lập khác.
+Mọi lập luận về mức độ tin cậy của AUC = 0.9299 và Accuracy = 0.8389 vì vậy chỉ
+dựa trên bằng chứng NỘI BỘ của chính dataset gốc - tức các kết quả đã trình bày ở
+mục 6.1-6.4 (kiểm định nội suy) và mục 5.6 (phân bố Confidence lưỡng cực).
 
-Chương trình: download_gold_data.py, strategy_comparison.py
+HAI DẤU HIỆU NỘI BỘ:
+(1) 76.07% bước giá là kết quả nội suy tuyến tính (mục 6.3), khiến quan hệ
+    r(t+1) = r(t) đúng gần như xác định trong các đoạn bị điền giá trị - một cơ
+    chế rò rỉ thông tin tương lai độc lập với năng lực thực sự của mô hình.
+(2) Phân bố Confidence lưỡng cực (mục 5.6): mô hình dự báo gần như hoàn hảo
+    (98.39%) ở 67% quan sát nhưng gần như ngẫu nhiên (51-59%) ở 33% quan sát còn
+    lại - tỷ lệ 33% này xấp xỉ đúng tỷ lệ ngày giao dịch thật ước tính trong bộ
+    dữ liệu.
 
-Chỉ tiêu                    Dataset gốc (nội suy)   Dữ liệu thật (đối chứng)
---------------------------------------------------------------------------------
-Số quan sát                 4016 (~365/năm)         2764 (~251/năm)
-Tỷ lệ bước giá trùng        76.07%                  0.18%
-Tự tương quan lag1          0.0415                  -0.0310
-Tỷ lệ ngày tăng             66.13%                  53.06%
-Số quan sát T7/CN           1148                    0
---------------------------------------------------------------------------------
-AUC                         0.9299                  0.5012
-Accuracy                    0.8389                  0.5003
-Baseline accuracy           0.7394                  0.5540
-Sharpe chiến lược AI        3.270                   0.576
---------------------------------------------------------------------------------
+Hai dấu hiệu này CÙNG CHỈ về một nguyên nhân, nên có cơ sở hợp lý để nghi ngờ
+rằng phần lớn năng lực dự báo quan sát được không phản ánh tín hiệu thị trường
+thật. Tuy nhiên, đây là suy luận dựa trên cơ chế thống kê, KHÔNG PHẢI một phép đo
+trực tiếp mức độ phóng đại - mức độ phóng đại cụ thể (bao nhiêu điểm AUC, bao
+nhiêu điểm Accuracy) CHƯA được định lượng.
 
-DIỄN GIẢI: AUC giảm từ 0.9299 xuống 0.5012 khi loại bỏ nội suy. Vì AUC = 0.5
-tương đương ngẫu nhiên hoàn toàn, kết quả này cho thấy GẦN NHƯ TOÀN BỘ năng lực
-dự báo quan sát được trên dataset gốc đến từ hiện tượng nội suy, không phải từ
-tín hiệu thị trường.
+HẠN CHẾ CẦN NÊU RÕ: việc thiếu thí nghiệm đối chứng trên dữ liệu độc lập là hạn
+chế quan trọng nhất của nghiên cứu (xem mục 11.1). Khuyến nghị ưu tiên hàng đầu
+cho nghiên cứu tiếp theo là thu thập một nguồn dữ liệu vàng độc lập chỉ gồm phiên
+giao dịch thật (không qua nội suy ngày nghỉ) và lặp lại toàn bộ quy trình để định
+lượng chính xác mức độ phóng đại này.
 
-Kết quả AUC 0.5012 trên dữ liệu thật NHẤT QUÁN với EMH dạng yếu (mục 1.1): tập
-chỉ báo kỹ thuật thuần - vốn đều là hàm của chuỗi giá quá khứ - không chứa thông
-tin dự báo hướng giá vàng ngày kế tiếp.
-
-KHUYẾN NGHỊ TRÌNH BÀY: kết quả ở Phần X nên được trình bày như phân tích trên bộ
-dữ liệu được cung cấp, KÈM phần đối chứng này. Nếu mục tiêu là kết luận về năng
-lực dự báo thực tế của AI trên thị trường vàng, cần sử dụng dữ liệu chỉ gồm phiên
-giao dịch thật.
+KHUYẾN NGHỊ TRÌNH BÀY: kết quả ở Phần X phải được trình bày kèm cảnh báo rõ ràng
+rằng các chỉ số dự báo (AUC, Accuracy) nhiều khả năng bị phóng đại, dựa trên bằng
+chứng gián tiếp ở mục 6.3 và 5.6, nhưng chưa có phép đo trực tiếp xác nhận.
 
 
 ================================================================================
@@ -2387,17 +2383,23 @@ và 76.07% bước giá là kết quả nội suy tuyến tính. Vì giá ngày 
 suy ra từ giá ngày giao dịch KẾ SAU, tồn tại rò rỉ thông tin tương lai trong dữ
 liệu đầu vào.
 
-HỆ QUẢ ĐỊNH LƯỢNG: các chỉ số Accuracy (0.8389) và AUC (0.9299) cao hơn đáng kể
-so với năng lực dự báo thực tế. Thí nghiệm đối chứng trên dữ liệu vàng thật cho
-AUC 0.5012 và Accuracy 0.5003 - tương đương ngẫu nhiên.
+HỆ QUẢ NGHI VẤN (chưa được định lượng trực tiếp): có cơ sở hợp lý để cho rằng các
+chỉ số Accuracy (0.8389) và AUC (0.9299) cao hơn đáng kể so với năng lực dự báo
+thực tế. Phân tích hiệu chuẩn (mục 5.6) cung cấp bằng chứng bổ sung: mô hình chia
+thành hai chế độ, dự báo gần như hoàn hảo ở 67% quan sát (các đoạn nội suy) và
+gần như ngẫu nhiên ở 33% còn lại (các phiên giao dịch thật). Tỷ lệ 33% này xấp xỉ
+tỷ lệ ngày giao dịch thật trong dataset.
 
-Phân tích hiệu chuẩn (mục 5.6) cung cấp bằng chứng bổ sung: mô hình chia thành hai
-chế độ, dự báo gần như hoàn hảo ở 67% quan sát (các đoạn nội suy) và gần như ngẫu
-nhiên ở 33% còn lại (các phiên giao dịch thật). Tỷ lệ 33% này xấp xỉ tỷ lệ ngày
-giao dịch thật trong dataset.
+GIỚI HẠN QUAN TRỌNG: đề tài CHƯA thực hiện thí nghiệm đối chứng trên một nguồn dữ
+liệu độc lập chỉ gồm phiên giao dịch thật. Do đó mức độ phóng đại cụ thể của các
+chỉ số trên - và của toàn bộ kết quả backtest chiến lược ở Phần X - chưa được đo
+lường trực tiếp mà chỉ được suy luận từ hai dấu hiệu nội bộ (mục 6.3 và 5.6). Đây
+là hạn chế quan trọng nhất của nghiên cứu.
 
-KHUYẾN NGHỊ: nếu mục tiêu là kết luận về năng lực dự báo thực tế của AI trên thị
-trường vàng, cần sử dụng dữ liệu chỉ gồm phiên giao dịch thật.
+KHUYẾN NGHỊ: kiến nghị ưu tiên hàng đầu cho nghiên cứu tiếp theo là thu thập một
+nguồn dữ liệu vàng độc lập chỉ gồm phiên giao dịch thật và lặp lại toàn bộ quy
+trình để định lượng chính xác mức độ phóng đại, trước khi đưa ra kết luận về năng
+lực dự báo thực tế của AI trên thị trường vàng.
 
 11.2. HẠN CHẾ VỀ GIAI ĐOẠN KIỂM ĐỊNH
 --------------------------------------------------------------------------------
@@ -2519,43 +2521,31 @@ PHỤ LỤC A. CẤU TRÚC THƯ MỤC DỰ ÁN
 
 NCKH Goldtrading/
 ├── data/
-│   ├── goc/
-│   │   └── gold_price_2015_2025_cleaned (1).csv   Dataset gốc - CHỈ ĐỌC, không sửa
-│   └── doi_chung/
-│       └── gold_yfinance_daily.csv                 Dữ liệu vàng thật (Yahoo Finance,
-│                                                    mã GC=F) dùng để đối chứng (mục 6.5)
+│   └── goc/
+│       └── gold_price_2015_2025_cleaned (1).csv   Dataset gốc - CHỈ ĐỌC, không sửa
 │
 ├── src/                                            Chương trình (chạy từ trong src/)
 │   ├── ai_vs_ta_original_data.py    Pipeline chính, 11 chương, chạy trên dataset gốc
 │   ├── phan_tich_xac_suat.py        Phân tích đầu ra xác suất và hiệu chuẩn (Phần V)
-│   ├── check_data_quality.py        Kiểm định chất lượng dữ liệu (Phần VI)
-│   ├── download_gold_data.py        Tải dữ liệu đối chứng (mục 6.5)
-│   └── strategy_comparison.py       Pipeline trên dữ liệu đối chứng (mục 6.5)
+│   └── check_data_quality.py        Kiểm định chất lượng dữ liệu (Phần VI)
 │
 ├── ket_qua/
-│   ├── goc/          Kết quả từ ai_vs_ta_original_data.py + phan_tich_xac_suat.py
-│   │   ├── ket_qua_so_sanh_original.csv        Bảng so sánh chiến lược (mục 10.4)
-│   │   ├── ablation_original.csv              Ablation study (mục 10.2)
-│   │   ├── feature_importance_original.csv     Gain Importance (mục 10.3)
-│   │   ├── loi_nhuan_theo_nam_original.csv     Lợi nhuận theo năm (mục 10.5)
-│   │   ├── chi_tieu_on_dinh_original.csv       Chỉ tiêu ổn định (mục 10.5)
-│   │   ├── chi_tiet_xac_suat_du_bao.csv        Xác suất từng quan sát (Phần V)
-│   │   ├── bang_hieu_chuan.csv                Bảng hiệu chuẩn (mục 5.5)
-│   │   ├── do_chinh_xac_theo_tu_tin.csv       Độ chính xác theo tự tin (mục 5.6)
-│   │   ├── hinh1_equity_drawdown_original.png  Đường equity và drawdown
-│   │   ├── hinh2_risk_return_original.png      Đánh đổi Sharpe - MaxDD
-│   │   ├── hinh3_loi_nhuan_nam_original.png    Lợi nhuận theo năm
-│   │   ├── hinh4_ablation_original.png         Ablation study và Gain theo nhóm
-│   │   ├── hinh5_shap_original.png             SHAP summary plot
-│   │   ├── hinh6_confusion_matrix_original.png Ma trận nhầm lẫn
-│   │   └── hinh7_hieu_chuan_xac_suat.png       Đường hiệu chuẩn và phân bố xác suất
-│   │
-│   └── doi_chung/    Kết quả đối chứng từ strategy_comparison.py (mục 6.5)
-│       ├── strategy_comparison_results.csv
-│       ├── strategy_yearly_returns.csv
-│       ├── strategy_comparison_equity.png
-│       ├── strategy_risk_return.png
-│       └── strategy_yearly_returns.png
+│   └── goc/          Kết quả từ ai_vs_ta_original_data.py + phan_tich_xac_suat.py
+│       ├── ket_qua_so_sanh_original.csv        Bảng so sánh chiến lược (mục 10.4)
+│       ├── ablation_original.csv              Ablation study (mục 10.2)
+│       ├── feature_importance_original.csv     Gain Importance (mục 10.3)
+│       ├── loi_nhuan_theo_nam_original.csv     Lợi nhuận theo năm (mục 10.5)
+│       ├── chi_tieu_on_dinh_original.csv       Chỉ tiêu ổn định (mục 10.5)
+│       ├── chi_tiet_xac_suat_du_bao.csv        Xác suất từng quan sát (Phần V)
+│       ├── bang_hieu_chuan.csv                Bảng hiệu chuẩn (mục 5.5)
+│       ├── do_chinh_xac_theo_tu_tin.csv       Độ chính xác theo tự tin (mục 5.6)
+│       ├── hinh1_equity_drawdown_original.png  Đường equity và drawdown
+│       ├── hinh2_risk_return_original.png      Đánh đổi Sharpe - MaxDD
+│       ├── hinh3_loi_nhuan_nam_original.png    Lợi nhuận theo năm
+│       ├── hinh4_ablation_original.png         Ablation study và Gain theo nhóm
+│       ├── hinh5_shap_original.png             SHAP summary plot
+│       ├── hinh6_confusion_matrix_original.png Ma trận nhầm lẫn
+│       └── hinh7_hieu_chuan_xac_suat.png       Đường hiệu chuẩn và phân bố xác suất
 │
 ├── tai_lieu/
 │   └── CO_SO_LY_LUAN.txt            Tài liệu này
@@ -2568,13 +2558,16 @@ NCKH Goldtrading/
 LƯU Ý QUAN TRỌNG: Dataset gốc data/goc/gold_price_2015_2025_cleaned (1).csv chỉ
 được ĐỌC, không bị chỉnh sửa hay thay thế bởi bất kỳ chương trình nào ở trên.
 
+LƯU Ý VỀ ĐỐI CHỨNG: đề tài KHÔNG có bộ dữ liệu đối chứng độc lập. Mọi lập luận về
+mức độ tin cậy của kết quả dự báo (mục 6.5, Phần XI) chỉ dựa trên bằng chứng nội
+bộ của chính dataset gốc.
+
 CÁCH CHẠY: mọi script trong src/ dùng đường dẫn tương đối ("../data/...",
 "../ket_qua/...") nên phải chạy với thư mục làm việc là src/, ví dụ:
         cd src
+        python check_data_quality.py
         python ai_vs_ta_original_data.py
         python phan_tich_xac_suat.py
-        python download_gold_data.py
-        python strategy_comparison.py
 
 ================================================================================
                                   HẾT
