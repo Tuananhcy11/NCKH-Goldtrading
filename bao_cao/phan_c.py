@@ -419,6 +419,195 @@ def chuong_3(doc):
          "Nhận xét này minh họa cho nguyên tắc đã nêu ở mục 1.4.4 rằng ba chỉ "
          "tiêu ổn định phải được đọc đồng thời.")
 
+    # ---------------------------------------------------------------- 3.7
+    heading(doc, "3.7. Phân tích độ nhạy tham số", level=2)
+    para(doc,
+         "Bốn tham số cấu hình của mô hình (INITIAL_TRAIN, RETRAIN_EVERY, "
+         "THRESHOLD, RANDOM_STATE) được lựa chọn theo cơ sở lý luận trình bày ở "
+         "mục 2.5.3 và 2.6.4, không qua tìm kiếm lưới, để tránh quá khớp vào tập "
+         "dùng đánh giá. Mục này bổ sung một phân tích độ nhạy thực nghiệm nhằm "
+         "định lượng mức độ ảnh hưởng thực tế của từng tham số, cung cấp căn cứ "
+         "cho việc hiệu chỉnh trong các nghiên cứu tiếp theo.")
+    para(doc,
+         "Nguyên tắc so sánh công bằng: khi INITIAL_TRAIN thay đổi, giai đoạn "
+         "ngoài mẫu cũng thay đổi theo nên không so sánh trực tiếp được. Mọi cấu "
+         "hình vì vậy được đánh giá thêm trên một CỬA SỔ CHUNG bắt đầu từ "
+         "18/02/2021 đến 29/12/2025 (1.776 quan sát) để bảo đảm tính công bằng "
+         "khi so sánh giữa các cấu hình.")
+
+    heading(doc, "3.7.1. Tác động của INITIAL_TRAIN", level=3)
+    table(doc,
+          caption_title="Kết quả trên cửa sổ chung theo độ dài tập huấn luyện "
+                        "ban đầu",
+          headers=["INITIAL_TRAIN", "Accuracy", "AUC", "Sharpe"],
+          rows=[
+              ["1.095 (~3 năm)", "0,8418", "0,9352", "3,945"],
+              ["1.460 (~4 năm)", "0,8418", "0,9352", "3,945"],
+              ["1.825 (~5 năm) — đang dùng", "0,8418", "0,9352", "3,945"],
+              ["2.190 (~6 năm)", "0,8418", "0,9352", "3,945"],
+          ],
+          widths=[3.4, 1.8, 1.8, 1.8],
+          note="Nguồn: kết quả chạy chương trình phan_tich_do_nhay.py.")
+    para(doc,
+         "Bốn cấu hình cho kết quả giống hệt đến từng chữ số trên cửa sổ chung. "
+         "Nguyên nhân: cả bốn giá trị đều là bội số của 365 (bằng RETRAIN_EVERY), "
+         "nên biên các fold walk-forward trùng nhau hoàn toàn từ mốc 2.190 trở "
+         "đi. Vì thiết kế dùng cửa sổ mở rộng, tập huấn luyện tại mỗi biên luôn "
+         "là toàn bộ dữ liệu từ đầu đến biên đó, không phụ thuộc điểm bắt đầu. "
+         "Kiểm chứng với các giá trị không phải bội số của 365 (1.200, 1.500, "
+         "2.000) cho kết quả khác nhau (Accuracy dao động 0,8378–0,8463), nhưng "
+         "chênh lệch này chỉ phản ánh độ lệch pha giữa các fold, không phản ánh "
+         "ảnh hưởng thực của lượng dữ liệu huấn luyện. Kết luận: với thiết kế "
+         "cửa sổ mở rộng, INITIAL_TRAIN chỉ quyết định giai đoạn ngoài mẫu bắt "
+         "đầu từ đâu, không ảnh hưởng chất lượng mô hình ở các thời điểm sau.")
+
+    heading(doc, "3.7.2. Tác động của RETRAIN_EVERY", level=3)
+    table(doc,
+          caption_title="Kết quả trên cửa sổ chung theo chu kỳ tái huấn luyện",
+          headers=["RETRAIN_EVERY", "Số fold", "Accuracy", "AUC", "Sharpe",
+                   "MaxDD"],
+          rows=[
+              ["90 ngày", "24", "0,8468", "0,9367", "**4,722**", "**−2,65%**"],
+              ["180 ngày", "12", "0,8418", "0,9349", "4,142", "−3,49%"],
+              ["365 ngày — đang dùng", "6", "0,8418", "0,9352", "3,945",
+               "−3,88%"],
+              ["730 ngày", "3", "0,8435", "0,9362", "3,843", "−6,12%"],
+              ["Không tái huấn luyện", "1", "0,8378", "0,9306", "3,245",
+               "−6,12%"],
+          ],
+          widths=[2.6, 1.2, 1.4, 1.2, 1.2, 1.4],
+          font_size=10,
+          note="Nguồn: kết quả chạy chương trình phan_tich_do_nhay.py.")
+    para(doc,
+         "Kết quả cho thấy xu hướng đơn điệu và rõ ràng: tái huấn luyện càng "
+         "thường xuyên, Sharpe càng cao và mức sụt giảm tối đa càng nhỏ. Từ "
+         "\"không tái huấn luyện\" đến chu kỳ 90 ngày, Sharpe tăng 45,5% (3,245 "
+         "lên 4,722) và mức sụt giảm tối đa giảm hơn một nửa (−6,12% xuống "
+         "−2,65%). Điểm đáng chú ý là Accuracy gần như không đổi trong toàn bộ "
+         "dải cấu hình (0,8378–0,8468, biên độ chưa đến 1 điểm phần trăm) trong "
+         "khi Sharpe biến động rất mạnh. Điều này cho thấy tái huấn luyện thường "
+         "xuyên không giúp mô hình \"đoán đúng nhiều hơn\" mà giúp mô hình "
+         "\"đoán đúng vào những thời điểm quan trọng hơn\" đối với lợi nhuận — "
+         "đây là bằng chứng thực nghiệm phù hợp với hàm ý của Giả thuyết Thị "
+         "trường Thích nghi trình bày ở mục 1.1.2.")
+
+    heading(doc, "3.7.3. Tác động của ngưỡng phân loại (THRESHOLD)", level=3)
+    table(doc,
+          caption_title="Kết quả trên cửa sổ chung theo ngưỡng phân loại",
+          headers=["THRESHOLD", "Accuracy", "Precision", "Recall", "Sharpe",
+                   "MaxDD", "Số lệnh"],
+          rows=[
+              ["0,45", "**0,8429**", "0,9151", "**0,8614**", "3,256",
+               "−5,27%", "202"],
+              ["0,50 — đang dùng", "0,8418", "0,9361", "0,8371", "3,945",
+               "−3,88%", "180"],
+              ["0,55", "0,8356", "0,9539", "0,8105", "4,198", "−3,42%", "144"],
+              ["0,60", "0,8226", "0,9661", "0,7807", "4,560", "−4,79%", "96"],
+              ["0,65", "0,8198", "0,9819", "0,7635", "**5,205**",
+               "**−2,67%**", "64"],
+              ["0,70", "0,8148", "**0,9857**", "0,7533", "5,197", "−2,85%",
+               "52"],
+          ],
+          widths=[2.0, 1.3, 1.3, 1.1, 1.1, 1.2, 1.1],
+          font_size=10,
+          note="Nguồn: kết quả chạy chương trình phan_tich_do_nhay.py.")
+    para(doc,
+         "Đây là tham số cho thấy hiệu ứng rõ nhất và đáng chú ý nhất trong bốn "
+         "tham số. Accuracy giảm đều khi nâng ngưỡng (0,8429 xuống 0,8148) "
+         "trong khi Sharpe tăng mạnh (3,256 lên 5,205, tương ứng +60%). Cơ chế: "
+         "nâng ngưỡng khiến mô hình bỏ qua các cơ hội có độ tin cậy thấp — làm "
+         "giảm Recall (0,8614 xuống 0,7533) nên Accuracy giảm theo, nhưng "
+         "Precision tăng mạnh (0,9151 lên 0,9857) và số lệnh giảm hơn 3 lần "
+         "(202 xuống 64) nên chi phí giao dịch giảm đáng kể. Đây là bằng chứng "
+         "thực nghiệm xác nhận công thức lý thuyết đã trình bày ở mục 2.6.4:")
+    formula(doc, "P(tăng) > 0,5 + c / ( 2 × E|r| )")
+    para(doc,
+         "tức ngưỡng phân loại tối ưu phải lớn hơn 0,5 khi tồn tại chi phí giao "
+         "dịch. Tối ưu thực nghiệm trên cửa sổ chung nằm ở ngưỡng 0,65 (Sharpe "
+         "5,205, mức sụt giảm tối đa nhỏ nhất −2,67%). Bài học quan trọng rút ra "
+         "là tối ưu hóa Accuracy và tối ưu hóa hiệu quả giao dịch là hai mục "
+         "tiêu khác nhau: nếu chọn ngưỡng theo tiêu chí Accuracy cao nhất sẽ "
+         "chọn 0,45 — nhưng đó lại là cấu hình có Sharpe thấp nhất trong toàn bộ "
+         "dải khảo sát.")
+
+    heading(doc, "3.7.4. Kiểm tra độ ổn định theo RANDOM_STATE", level=3)
+    table(doc,
+          caption_title="Kết quả trên cửa sổ chung theo năm giá trị "
+                        "khởi tạo ngẫu nhiên khác nhau",
+          headers=["RANDOM_STATE", "Accuracy", "AUC", "Sharpe", "MaxDD"],
+          rows=[
+              ["0", "0,8418", "0,9348", "3,950", "−4,10%"],
+              ["1", "0,8367", "0,9347", "3,864", "−3,71%"],
+              ["7", "0,8350", "0,9327", "3,442", "−3,98%"],
+              ["42 — đang dùng", "0,8418", "0,9352", "3,945", "−3,88%"],
+              ["123", "0,8407", "0,9341", "3,871", "−4,01%"],
+          ],
+          widths=[2.2, 1.6, 1.6, 1.4, 1.4],
+          note="Nguồn: kết quả chạy chương trình phan_tich_do_nhay.py.")
+    table(doc,
+          caption_title="Tổng hợp độ phân tán qua năm giá trị khởi tạo "
+                        "ngẫu nhiên",
+          headers=["Chỉ tiêu", "Nhỏ nhất", "Lớn nhất", "Trung bình",
+                   "Độ lệch chuẩn"],
+          rows=[
+              ["Accuracy", "0,8350", "0,8418", "0,8392", "0,0031"],
+              ["AUC", "0,9327", "0,9352", "0,9343", "**0,0010**"],
+              ["Sharpe", "3,442", "3,950", "3,814", "**0,2120**"],
+              ["MaxDD", "−4,10%", "−3,71%", "−3,93%", "0,0015"],
+          ],
+          widths=[1.8, 1.6, 1.6, 1.8, 1.8],
+          note="Nguồn: kết quả tính toán của nhóm nghiên cứu.")
+    para(doc,
+         "Kết quả cho thấy mô hình ổn định về năng lực dự báo — AUC chỉ dao "
+         "động trong biên độ 0,0025, không đáng kể. Tuy nhiên tỷ số Sharpe dao "
+         "động với biên độ 0,508, tương đương khoảng 13% giá trị trung bình. "
+         "Nghĩa là con số Sharpe 3,945 báo cáo ở random_state = 42 (mục 3.5) có "
+         "sai số ngẫu nhiên đáng kể do việc khởi tạo mô hình: với random_state "
+         "= 7, Sharpe chỉ còn 3,442. Đây là một hạn chế cần lưu ý khi diễn giải "
+         "các chỉ số hiệu quả chiến lược — nên báo cáo Sharpe dưới dạng trung "
+         "bình cộng với độ lệch chuẩn qua nhiều giá trị khởi tạo (ở đây là "
+         "3,814 ± 0,212) thay vì một con số đơn lẻ, và được nêu cụ thể ở mục "
+         "4.5.6.")
+
+    figure(doc, G + "hinh8_phan_tich_do_nhay.png",
+           "Tổng hợp trực quan độ nhạy của bốn tham số cấu hình",
+           width_cm=15.5,
+           source="Nguồn: kết quả tính toán của nhóm nghiên cứu.")
+
+    heading(doc, "3.7.5. Khuyến nghị hiệu chỉnh tham số", level=3)
+    table(doc,
+          caption_title="Xếp hạng mức ảnh hưởng của từng tham số lên "
+                        "tỷ số Sharpe",
+          headers=["Hạng", "Tham số", "Biên độ Sharpe quan sát được",
+                   "Cần huấn luyện lại?"],
+          rows=[
+              ["1", "THRESHOLD", "3,256 → 5,205 (+1,949)", "Không"],
+              ["2", "RETRAIN_EVERY", "3,245 → 4,722 (+1,477)", "Có"],
+              ["3", "RANDOM_STATE", "3,442 → 3,950 (+0,508)", "Có"],
+              ["4", "INITIAL_TRAIN", "~0 (chỉ là nhiễu do lệch fold)", "Có"],
+          ],
+          widths=[0.8, 2.0, 3.2, 2.0],
+          note="Nguồn: tổng hợp của nhóm nghiên cứu.")
+    para(doc,
+         "Dựa trên xếp hạng này, quy trình hiệu chỉnh được khuyến nghị theo thứ "
+         "tự: (1) điều chỉnh THRESHOLD trước tiên vì đây là tham số hậu xử lý, "
+         "không cần huấn luyện lại mô hình và có tác động lớn nhất; (2) giảm "
+         "RETRAIN_EVERY nếu tài nguyên tính toán cho phép, đổi lại thời gian "
+         "chạy tăng theo tỷ lệ nghịch với chu kỳ; (3) không tinh chỉnh "
+         "RANDOM_STATE mà thay vào đó báo cáo kết quả trung bình qua nhiều giá "
+         "trị khởi tạo; (4) giữ nguyên INITIAL_TRAIN ở mức hiện tại vì tham số "
+         "này không ảnh hưởng đến chất lượng mô hình.")
+    para(doc,
+         "Cần lưu ý một giới hạn phương pháp luận quan trọng: việc chọn "
+         "THRESHOLD = 0,65 vì nó cho Sharpe cao nhất trên chính tập dữ liệu "
+         "dùng để đánh giá là một dạng thiên lệch lựa chọn (selection bias) "
+         "theo cảnh báo của Bailey và López de Prado (2014) đã dẫn ở mục 4.5.5. "
+         "Để hiệu chỉnh đúng chuẩn, cần tách một tập validation riêng để chọn "
+         "ngưỡng rồi kiểm định trên một tập khác, hoặc báo cáo Deflated Sharpe "
+         "Ratio để hiệu chỉnh cho số lần thử nghiệm tham số. Đây là lý do đề tài "
+         "vẫn giữ THRESHOLD = 0,50 làm cấu hình chính thức ở mục 3.5 và 3.6, "
+         "trong khi trình bày kết quả với THRESHOLD = 0,65 tại mục này chỉ như "
+         "một phân tích độ nhạy mang tính tham khảo.")
 
 
 def chuong_4(doc):
@@ -633,7 +822,12 @@ def chuong_4(doc):
                 "thuật thường cải thiện tỷ số Sharpe.")
     bullet(doc, "Siêu tham số được chọn theo cơ sở lý luận thay vì tìm kiếm hệ "
                 "thống. Đây là lựa chọn có chủ đích để tránh quá khớp vào tập "
-                "kiểm định, nhưng có nghĩa kết quả chưa phải tối ưu.")
+                "kiểm định, nhưng có nghĩa kết quả chưa phải tối ưu. Phân tích "
+                "độ nhạy ở mục 3.7 định lượng phần nào mức ảnh hưởng này, cho "
+                "thấy THRESHOLD và RETRAIN_EVERY có tác động đáng kể (biên độ "
+                "Sharpe lần lượt +1,949 và +1,477), trong khi việc chọn ngưỡng "
+                "tối ưu hậu nghiệm tự nó lại là một dạng thiên lệch lựa chọn "
+                "cần được hiệu chỉnh thêm (xem mục 3.7.5).")
     bullet(doc, "Mô hình tập trung quá mức vào hai biến RSI14 và log_return_lag1 "
                 "chiếm 70,11% tổng Gain, làm giảm tính bền vững nếu quan hệ của "
                 "hai biến này thay đổi.")
@@ -894,6 +1088,8 @@ def phu_luc(doc):
                "ablation study, backtest tám chiến lược, diễn giải mô hình"],
               ["phan_tich_xac_suat.py",
                "Phân tích đầu ra xác suất và mức độ hiệu chuẩn (mục 3.4)"],
+              ["phan_tich_do_nhay.py",
+               "Phân tích độ nhạy bốn tham số cấu hình (mục 3.7)"],
           ],
           widths=[2.6, 5.4],
           font_size=10,
@@ -907,13 +1103,14 @@ def phu_luc(doc):
                "ket_qua_so_sanh_original.csv, ablation_original.csv, "
                "feature_importance_original.csv, loi_nhuan_theo_nam_original.csv, "
                "chi_tieu_on_dinh_original.csv, chi_tiet_xac_suat_du_bao.csv, "
-               "bang_hieu_chuan.csv, do_chinh_xac_theo_tu_tin.csv"],
+               "bang_hieu_chuan.csv, do_chinh_xac_theo_tu_tin.csv, "
+               "phan_tich_do_nhay.csv"],
               ["Biểu đồ\n(bộ dữ liệu đề tài)",
                "hinh1_equity_drawdown_original.png, "
                "hinh2_risk_return_original.png, hinh3_loi_nhuan_nam_original.png, "
                "hinh4_ablation_original.png, hinh5_shap_original.png, "
                "hinh6_confusion_matrix_original.png, "
-               "hinh7_hieu_chuan_xac_suat.png"],
+               "hinh7_hieu_chuan_xac_suat.png, hinh8_phan_tich_do_nhay.png"],
           ],
           widths=[2.2, 5.8],
           font_size=9,
