@@ -21,7 +21,8 @@ from xgboost import XGBClassifier
 from sklearn.metrics import (accuracy_score, roc_auc_score, log_loss,
                              brier_score_loss, confusion_matrix)
 
-DATA_PATH = "gold_price_2015_2025_cleaned (1).csv"
+DATA_PATH = "../data/goc/gold_price_2015_2025_cleaned (1).csv"
+OUT_DIR = "../ket_qua/goc/"
 INITIAL_TRAIN = 1825
 RETRAIN_EVERY = 365
 THRESHOLD = 0.50
@@ -183,9 +184,9 @@ print(f"F1        = 2PR/(P+R)          = {2*tp/(2*tp+fp+fn):.4f}")
 # ---------- Xuat file ----------
 out = oos[["Date", "Close", "raw_score", "P_up", "P_down", "confidence",
            "du_bao", "thuc_te", "dung"]].copy()
-out.to_csv("chi_tiet_xac_suat_du_bao.csv", index=False)
-cal.to_csv("bang_hieu_chuan.csv", index=False)
-conf_tbl.to_csv("do_chinh_xac_theo_tu_tin.csv", index=False)
+out.to_csv(f"{OUT_DIR}chi_tiet_xac_suat_du_bao.csv", index=False)
+cal.to_csv(f"{OUT_DIR}bang_hieu_chuan.csv", index=False)
+conf_tbl.to_csv(f"{OUT_DIR}do_chinh_xac_theo_tu_tin.csv", index=False)
 print("\nDa luu: chi_tiet_xac_suat_du_bao.csv, bang_hieu_chuan.csv, do_chinh_xac_theo_tu_tin.csv")
 
 # ---------- Bieu do hieu chuan ----------
@@ -207,6 +208,6 @@ ax[1].set_title("Phan bo xac suat du bao", fontweight="bold")
 ax[1].legend(fontsize=9)
 ax[1].grid(alpha=.3, axis="y")
 plt.tight_layout()
-plt.savefig("hinh7_hieu_chuan_xac_suat.png", dpi=130)
+plt.savefig(f"{OUT_DIR}hinh7_hieu_chuan_xac_suat.png", dpi=130)
 print("Da luu: hinh7_hieu_chuan_xac_suat.png")
 print("\n=== HOAN TAT ===")

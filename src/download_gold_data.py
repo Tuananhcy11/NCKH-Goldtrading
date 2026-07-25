@@ -6,7 +6,7 @@ import yfinance as yf
 TICKER = "GC=F"          # Gold Futures (COMEX). Thay "XAUUSD=X" neu muon spot.
 START = "2015-01-01"
 END = "2025-12-31"
-OUT = "gold_yfinance_daily.csv"
+OUT = "../data/doi_chung/gold_yfinance_daily.csv"
 
 df = yf.download(TICKER, start=START, end=END, progress=False, auto_adjust=False)
 

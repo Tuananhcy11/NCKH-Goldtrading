@@ -3,7 +3,7 @@
 import pandas as pd
 import numpy as np
 
-DATA_PATH = "gold_price_2015_2025_cleaned (1).csv"
+DATA_PATH = "../data/goc/gold_price_2015_2025_cleaned (1).csv"
 
 df = pd.read_csv(DATA_PATH, parse_dates=["Date"])
 df = df.sort_values("Date").reset_index(drop=True)

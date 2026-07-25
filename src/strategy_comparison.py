@@ -23,7 +23,8 @@ import matplotlib.pyplot as plt
 from xgboost import XGBClassifier
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 
-DATA_PATH = "gold_yfinance_daily.csv"
+DATA_PATH = "../data/doi_chung/gold_yfinance_daily.csv"
+OUT_DIR = "../ket_qua/doi_chung/"
 COST_BPS = 2.0            # chi phi giao dich moi lan doi vi the (0.02% = 2 bps)
 TRADING_DAYS = 252
 INITIAL_TRAIN = 1260      # ~5 nam dau lam tap huan luyen ban dau
@@ -248,7 +249,7 @@ for c in ["Sharpe", "Sortino", "Calmar"]:
     display_df[c] = display_df[c].round(3)
 print(display_df.to_string())
 
-results_df.to_csv("strategy_comparison_results.csv")
+results_df.to_csv(f"{OUT_DIR}strategy_comparison_results.csv")
 print("\nDa luu: strategy_comparison_results.csv")
 
 # ==========================================================
@@ -264,7 +265,7 @@ for name in positions.columns:
     yearly[name] = tmp.groupby("year")["r"].sum().apply(lambda x: (np.exp(x) - 1) * 100)
 yearly_df = pd.DataFrame(yearly).round(2)
 print(yearly_df.to_string())
-yearly_df.to_csv("strategy_yearly_returns.csv")
+yearly_df.to_csv(f"{OUT_DIR}strategy_yearly_returns.csv")
 
 print("\nDo lech chuan loi nhuan nam (cang nho cang on dinh):")
 print(yearly_df.std().round(2).sort_values().to_string())
@@ -297,7 +298,7 @@ axes[1].set_xlabel("Thoi gian")
 axes[1].grid(alpha=0.3)
 
 plt.tight_layout()
-plt.savefig("strategy_comparison_equity.png", dpi=130)
+plt.savefig(f"{OUT_DIR}strategy_comparison_equity.png", dpi=130)
 print("\nDa luu: strategy_comparison_equity.png")
 
 # Bieu do Sharpe vs MaxDD
@@ -315,7 +316,7 @@ ax.set_title("Danh doi Loi nhuan/Rui ro: AI (do) vs Ky thuat (xanh) vs Buy&Hold 
              fontsize=12, fontweight="bold")
 ax.grid(alpha=0.3)
 plt.tight_layout()
-plt.savefig("strategy_risk_return.png", dpi=130)
+plt.savefig(f"{OUT_DIR}strategy_risk_return.png", dpi=130)
 print("Da luu: strategy_risk_return.png")
 
 # Bieu do loi nhuan theo nam
@@ -328,7 +329,7 @@ ax.set_xlabel("Nam")
 ax.legend(fontsize=8, ncol=2)
 ax.grid(alpha=0.3, axis="y")
 plt.tight_layout()
-plt.savefig("strategy_yearly_returns.png", dpi=130)
+plt.savefig(f"{OUT_DIR}strategy_yearly_returns.png", dpi=130)
 print("Da luu: strategy_yearly_returns.png")
 
 print("\n=== HOAN TAT ===")

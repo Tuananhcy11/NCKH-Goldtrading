@@ -2514,38 +2514,67 @@ PHẦN XII. TÀI LIỆU THAM KHẢO
 
 
 ================================================================================
-PHỤ LỤC A. DANH MỤC CHƯƠNG TRÌNH VÀ FILE KẾT QUẢ
+PHỤ LỤC A. CẤU TRÚC THƯ MỤC DỰ ÁN
 ================================================================================
 
-CHƯƠNG TRÌNH:
-        ai_vs_ta_original_data.py   Pipeline chính, 11 chương, chạy trên dataset gốc
-        phan_tich_xac_suat.py       Phân tích đầu ra xác suất và hiệu chuẩn (Phần V)
-        check_data_quality.py       Kiểm định chất lượng dữ liệu (Phần VI)
-        download_gold_data.py       Tải dữ liệu đối chứng (mục 6.5)
-        strategy_comparison.py      Pipeline trên dữ liệu đối chứng (mục 6.5)
-        clean_real_trading_days.py  Tách phiên giao dịch thật từ dataset gốc
+NCKH Goldtrading/
+├── data/
+│   ├── goc/
+│   │   └── gold_price_2015_2025_cleaned (1).csv   Dataset gốc - CHỈ ĐỌC, không sửa
+│   └── doi_chung/
+│       └── gold_yfinance_daily.csv                 Dữ liệu vàng thật (Yahoo Finance,
+│                                                    mã GC=F) dùng để đối chứng (mục 6.5)
+│
+├── src/                                            Chương trình (chạy từ trong src/)
+│   ├── ai_vs_ta_original_data.py    Pipeline chính, 11 chương, chạy trên dataset gốc
+│   ├── phan_tich_xac_suat.py        Phân tích đầu ra xác suất và hiệu chuẩn (Phần V)
+│   ├── check_data_quality.py        Kiểm định chất lượng dữ liệu (Phần VI)
+│   ├── download_gold_data.py        Tải dữ liệu đối chứng (mục 6.5)
+│   └── strategy_comparison.py       Pipeline trên dữ liệu đối chứng (mục 6.5)
+│
+├── ket_qua/
+│   ├── goc/          Kết quả từ ai_vs_ta_original_data.py + phan_tich_xac_suat.py
+│   │   ├── ket_qua_so_sanh_original.csv        Bảng so sánh chiến lược (mục 10.4)
+│   │   ├── ablation_original.csv              Ablation study (mục 10.2)
+│   │   ├── feature_importance_original.csv     Gain Importance (mục 10.3)
+│   │   ├── loi_nhuan_theo_nam_original.csv     Lợi nhuận theo năm (mục 10.5)
+│   │   ├── chi_tieu_on_dinh_original.csv       Chỉ tiêu ổn định (mục 10.5)
+│   │   ├── chi_tiet_xac_suat_du_bao.csv        Xác suất từng quan sát (Phần V)
+│   │   ├── bang_hieu_chuan.csv                Bảng hiệu chuẩn (mục 5.5)
+│   │   ├── do_chinh_xac_theo_tu_tin.csv       Độ chính xác theo tự tin (mục 5.6)
+│   │   ├── hinh1_equity_drawdown_original.png  Đường equity và drawdown
+│   │   ├── hinh2_risk_return_original.png      Đánh đổi Sharpe - MaxDD
+│   │   ├── hinh3_loi_nhuan_nam_original.png    Lợi nhuận theo năm
+│   │   ├── hinh4_ablation_original.png         Ablation study và Gain theo nhóm
+│   │   ├── hinh5_shap_original.png             SHAP summary plot
+│   │   ├── hinh6_confusion_matrix_original.png Ma trận nhầm lẫn
+│   │   └── hinh7_hieu_chuan_xac_suat.png       Đường hiệu chuẩn và phân bố xác suất
+│   │
+│   └── doi_chung/    Kết quả đối chứng từ strategy_comparison.py (mục 6.5)
+│       ├── strategy_comparison_results.csv
+│       ├── strategy_yearly_returns.csv
+│       ├── strategy_comparison_equity.png
+│       ├── strategy_risk_return.png
+│       └── strategy_yearly_returns.png
+│
+├── tai_lieu/
+│   └── CO_SO_LY_LUAN.txt            Tài liệu này
+│
+└── tham_khao/
+    └── [nckh]_gold_trade.py         Bản thảo gốc của nhóm (mô hình 3 lớp BUY/HOLD/SELL,
+                                      holding period 5 ngày) - giữ lại để tham khảo,
+                                      không phải một phần của pipeline chính
 
-FILE KẾT QUẢ DẠNG BẢNG:
-        ket_qua_so_sanh_original.csv        Bảng so sánh chiến lược (mục 10.4)
-        ablation_original.csv              Ablation study (mục 10.2)
-        feature_importance_original.csv     Gain Importance (mục 10.3)
-        loi_nhuan_theo_nam_original.csv     Lợi nhuận theo năm (mục 10.5)
-        chi_tieu_on_dinh_original.csv       Chỉ tiêu ổn định (mục 10.5)
-        chi_tiet_xac_suat_du_bao.csv        Xác suất từng quan sát (Phần V)
-        bang_hieu_chuan.csv                Bảng hiệu chuẩn (mục 5.5)
-        do_chinh_xac_theo_tu_tin.csv       Độ chính xác theo tự tin (mục 5.6)
+LƯU Ý QUAN TRỌNG: Dataset gốc data/goc/gold_price_2015_2025_cleaned (1).csv chỉ
+được ĐỌC, không bị chỉnh sửa hay thay thế bởi bất kỳ chương trình nào ở trên.
 
-BIỂU ĐỒ:
-        hinh1_equity_drawdown_original.png  Đường equity và drawdown
-        hinh2_risk_return_original.png      Đánh đổi Sharpe - MaxDD
-        hinh3_loi_nhuan_nam_original.png    Lợi nhuận theo năm
-        hinh4_ablation_original.png         Ablation study và Gain theo nhóm
-        hinh5_shap_original.png             SHAP summary plot
-        hinh6_confusion_matrix_original.png Ma trận nhầm lẫn
-        hinh7_hieu_chuan_xac_suat.png       Đường hiệu chuẩn và phân bố xác suất
-
-LƯU Ý: Dataset gốc gold_price_2015_2025_cleaned (1).csv chỉ được ĐỌC, không bị
-chỉnh sửa hay thay thế bởi bất kỳ chương trình nào ở trên.
+CÁCH CHẠY: mọi script trong src/ dùng đường dẫn tương đối ("../data/...",
+"../ket_qua/...") nên phải chạy với thư mục làm việc là src/, ví dụ:
+        cd src
+        python ai_vs_ta_original_data.py
+        python phan_tich_xac_suat.py
+        python download_gold_data.py
+        python strategy_comparison.py
 
 ================================================================================
                                   HẾT

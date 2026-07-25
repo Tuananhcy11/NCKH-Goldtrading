@@ -6,7 +6,7 @@ Chay tren BO DATASET GOC: gold_price_2015_2025_cleaned (1).csv
 File dataset chi duoc DOC, KHONG chinh sua, KHONG thay the.
 ================================================================================
 
-CO SO LY LUAN CUA THIET KE THUC NGHIEM — xem chi tiet tai CO_SO_LY_LUAN.md
+CO SO LY LUAN CUA THIET KE THUC NGHIEM — xem chi tiet tai ../tai_lieu/CO_SO_LY_LUAN.txt
 
 Cau truc chuong trinh:
   Chuong 1. Nap du lieu goc
@@ -36,7 +36,8 @@ from sklearn.metrics import (accuracy_score, f1_score, roc_auc_score,
 import shap
 
 # ================== THAM SO CAU HINH ==================
-DATA_PATH = "gold_price_2015_2025_cleaned (1).csv"   # DATASET GOC — chi doc
+DATA_PATH = "../data/goc/gold_price_2015_2025_cleaned (1).csv"   # DATASET GOC — chi doc
+OUT_DIR = "../ket_qua/goc/"                                       # thu muc luu ket qua
 
 # CO SO LY LUAN: dataset goc chua ca T7/CN => 1 nam co ~365 quan sat, khong phai
 # 252 nhu du lieu phien giao dich thuc. He so quy doi nam (annualization factor)
@@ -360,7 +361,7 @@ for gname, gfeats in FEATURE_GROUPS.items():
 ablation_df = pd.DataFrame(ablation).T
 ablation_df["AUC_gia_tang"] = ablation_df["AUC"].diff()
 print(f"\n{ablation_df.round(4).to_string()}")
-ablation_df.to_csv(f"ablation{SUFFIX}.csv")
+ablation_df.to_csv(f"{OUT_DIR}ablation{SUFFIX}.csv")
 
 
 # ==========================================================
@@ -510,7 +511,7 @@ show["N_Trades"] = show["N_Trades"].astype(int)
 print(f"He so quy doi nam: {PERIODS_PER_YEAR} | Chi phi: {COST_BPS} bps/lan")
 print(f"Giai doan: {oos.Date.min().date()} -> {oos.Date.max().date()}\n")
 print(show.to_string())
-res_df.to_csv(f"ket_qua_so_sanh{SUFFIX}.csv")
+res_df.to_csv(f"{OUT_DIR}ket_qua_so_sanh{SUFFIX}.csv")
 
 
 # ==========================================================
@@ -540,8 +541,8 @@ stab = pd.DataFrame({
     "Nam_Xau_Nhat_%": yearly_df.min(),
 }).round(2).sort_values("DoLechChuan_LN_Nam")
 print(f"\nChi tieu on dinh:\n{stab.to_string()}")
-yearly_df.to_csv(f"loi_nhuan_theo_nam{SUFFIX}.csv")
-stab.to_csv(f"chi_tieu_on_dinh{SUFFIX}.csv")
+yearly_df.to_csv(f"{OUT_DIR}loi_nhuan_theo_nam{SUFFIX}.csv")
+stab.to_csv(f"{OUT_DIR}chi_tieu_on_dinh{SUFFIX}.csv")
 
 
 # ==========================================================
@@ -576,7 +577,7 @@ for f in FEATURES_LAG:
     group_of[f] = "4_Tre"
 grp_gain = gain.groupby(gain.index.map(group_of)).sum().sort_values(ascending=False)
 print(f"\nTong Gain theo nhom (%):\n{grp_gain.round(2).to_string()}")
-gain.to_csv(f"feature_importance{SUFFIX}.csv")
+gain.to_csv(f"{OUT_DIR}feature_importance{SUFFIX}.csv")
 
 print("\nDang tinh SHAP values...")
 X_oos = oos[ALL_FEATURES]
@@ -615,8 +616,8 @@ ax[1].set_title("Drawdown (%)", fontsize=12, fontweight="bold")
 ax[1].set_ylabel("Drawdown (%)")
 ax[1].grid(alpha=.3)
 plt.tight_layout()
-plt.savefig(f"hinh1_equity_drawdown{SUFFIX}.png", dpi=130)
-print(f"  hinh1_equity_drawdown{SUFFIX}.png")
+plt.savefig(f"{OUT_DIR}hinh1_equity_drawdown{SUFFIX}.png", dpi=130)
+print(f"  {OUT_DIR}hinh1_equity_drawdown{SUFFIX}.png")
 
 # --- Hinh 2: Sharpe vs MaxDD ---
 fig, ax = plt.subplots(figsize=(10, 7))
@@ -632,8 +633,8 @@ ax.set_title("Danh doi Loi nhuan / Rui ro\nAI (do) — Ky thuat (xanh) — Buy&H
              fontsize=12, fontweight="bold")
 ax.grid(alpha=.3)
 plt.tight_layout()
-plt.savefig(f"hinh2_risk_return{SUFFIX}.png", dpi=130)
-print(f"  hinh2_risk_return{SUFFIX}.png")
+plt.savefig(f"{OUT_DIR}hinh2_risk_return{SUFFIX}.png", dpi=130)
+print(f"  {OUT_DIR}hinh2_risk_return{SUFFIX}.png")
 
 # --- Hinh 3: Loi nhuan theo nam ---
 fig, ax = plt.subplots(figsize=(14, 6))
@@ -645,8 +646,8 @@ ax.set_xlabel("Nam")
 ax.legend(fontsize=8, ncol=2)
 ax.grid(alpha=.3, axis="y")
 plt.tight_layout()
-plt.savefig(f"hinh3_loi_nhuan_nam{SUFFIX}.png", dpi=130)
-print(f"  hinh3_loi_nhuan_nam{SUFFIX}.png")
+plt.savefig(f"{OUT_DIR}hinh3_loi_nhuan_nam{SUFFIX}.png", dpi=130)
+print(f"  {OUT_DIR}hinh3_loi_nhuan_nam{SUFFIX}.png")
 
 # --- Hinh 4: Ablation study ---
 fig, ax = plt.subplots(1, 2, figsize=(14, 5))
@@ -662,8 +663,8 @@ ax[1].set_title("Tong Gain Importance theo nhom (%)", fontweight="bold")
 ax[1].set_xlabel("% dong gop")
 ax[1].grid(alpha=.3, axis="x")
 plt.tight_layout()
-plt.savefig(f"hinh4_ablation{SUFFIX}.png", dpi=130)
-print(f"  hinh4_ablation{SUFFIX}.png")
+plt.savefig(f"{OUT_DIR}hinh4_ablation{SUFFIX}.png", dpi=130)
+print(f"  {OUT_DIR}hinh4_ablation{SUFFIX}.png")
 
 # --- Hinh 5: SHAP summary ---
 plt.figure()
@@ -671,8 +672,8 @@ shap.summary_plot(shap_values, X_oos, show=False, max_display=len(ALL_FEATURES))
 plt.title("SHAP Summary — chieu va do lon tac dong cua tung dac trung",
           fontsize=11, fontweight="bold")
 plt.tight_layout()
-plt.savefig(f"hinh5_shap{SUFFIX}.png", dpi=130)
-print(f"  hinh5_shap{SUFFIX}.png")
+plt.savefig(f"{OUT_DIR}hinh5_shap{SUFFIX}.png", dpi=130)
+print(f"  {OUT_DIR}hinh5_shap{SUFFIX}.png")
 
 # --- Hinh 6: Confusion matrix ---
 fig, ax = plt.subplots(figsize=(6, 5))
@@ -684,8 +685,8 @@ ax.set_title(f"Confusion Matrix — AI XGBoost (Acc={acc:.3f}, AUC={auc:.3f})",
 ax.set_xlabel("Du bao")
 ax.set_ylabel("Thuc te")
 plt.tight_layout()
-plt.savefig(f"hinh6_confusion_matrix{SUFFIX}.png", dpi=130)
-print(f"  hinh6_confusion_matrix{SUFFIX}.png")
+plt.savefig(f"{OUT_DIR}hinh6_confusion_matrix{SUFFIX}.png", dpi=130)
+print(f"  {OUT_DIR}hinh6_confusion_matrix{SUFFIX}.png")
 
 # ==========================================================
 # TONG KET
